@@ -1,0 +1,29 @@
+{
+  "name": "trendy-recipes",
+  "version": "1.0.0",
+  "description": "REST API for Trendy Recipes",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YuriHassle/trendy-recipes-server.git"
+  },
+  "keywords": [
+    "portfolio",
+    "api",
+    "node",
+    "rest",
+    "fastify"
+  ],
+  "author": "yurihassle",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YuriHassle/trendy-recipes-server/issues"
+  },
+  "homepage": "https://github.com/YuriHassle/trendy-recipes-server#readme",
+  "dependencies": {
+    "fastify": "^4.23.2"
+  }
+}
