@@ -1,4 +1,6 @@
 import knex, { Knex } from 'knex';
+import dotenv from 'dotenv';
+dotenv.config();
 
 let dbConnection: Knex;
 export default function getDBConnection() {
