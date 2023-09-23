@@ -27,7 +27,9 @@
   },
   "homepage": "https://github.com/YuriHassle/trendy-recipes-server#readme",
   "dependencies": {
-    "fastify": "^4.23.2"
+    "fastify": "^4.23.2",
+    "knex": "^2.5.1",
+    "mysql": "^2.18.1"
   },
   "devDependencies": {
     "@tsconfig/node18": "^18.2.2",
