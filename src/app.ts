@@ -1,10 +1,10 @@
 import fastify from 'fastify';
+import userRouter from './components/users/entry-points/routes';
+import videoRouter from './components/videos/entry-points/routes';
 
 const server = fastify();
-
-server.get('/ping', async () => {
-  return 'pong\n';
-});
+server.register(userRouter, { prefix: '/users' });
+server.register(videoRouter, { prefix: '/videos' });
 
 server.listen({ port: 8080 }, (err, address) => {
   if (err) {
