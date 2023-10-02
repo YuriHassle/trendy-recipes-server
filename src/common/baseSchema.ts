@@ -7,4 +7,9 @@ export const BaseQuery = Type.Object({
   orderDirection: Type.Optional(Type.String({ enum: ['asc', 'desc'] })),
 });
 
+export const BaseParam = Type.Object({
+  id: Type.String(),
+});
+
 export type BaseQueryType = Static<typeof BaseQuery>;
+export type BaseParamType = Static<typeof BaseParam>;

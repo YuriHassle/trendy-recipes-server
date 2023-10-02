@@ -16,7 +16,7 @@ export const User = Type.Object({
 
 export const Users = Type.Array(User);
 
-export const UserBody = Type.Object({
+export const UserBodyAdd = Type.Object({
   name: Type.String(),
   email: Type.String({
     format: 'email',
@@ -31,10 +31,22 @@ export const UserBody = Type.Object({
   points: Type.Optional(Type.Number()),
 });
 
-export const UserParams = Type.Object({
-  id: Type.Number(),
+export const UserBodyUpdate = Type.Object({
+  name: Type.Optional(Type.String()),
+  email: Type.Optional(
+    Type.String({
+      format: 'email',
+      minLength: 10,
+      errorMessage: {
+        format: VM.format('email'),
+        minLength: VM.minLength('email', 5),
+      },
+    }),
+  ),
+  password: Type.Optional(Type.String()),
+  language_id: Type.Optional(Type.Number()),
 });
 
 export type UserType = Static<typeof User>;
-export type UserParamsType = Static<typeof UserParams>;
-export type UserBodyType = Static<typeof UserBody>;
+export type UserBodyAddType = Static<typeof UserBodyAdd>;
+export type UserBodyUpdateType = Static<typeof UserBodyUpdate>;

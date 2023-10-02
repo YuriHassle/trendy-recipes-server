@@ -1,7 +1,7 @@
 import UserRepository from '../data-access/UserRepository';
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { BaseQueryType } from '../../../common/baseSchema';
-import { UserBodyType } from './schema';
+import { BaseQueryType, BaseParamType } from '../../../common/baseSchema';
+import { UserBodyAddType, UserBodyUpdateType } from './schema';
 
 export default class UserService {
   async findAll(
@@ -19,7 +19,7 @@ export default class UserService {
   }
 
   async create(
-    request: FastifyRequest<{ Body: UserBodyType }>,
+    request: FastifyRequest<{ Body: UserBodyAddType }>,
     reply: FastifyReply,
   ) {
     const { email, name, password, points, language_id } = request.body;
@@ -32,5 +32,25 @@ export default class UserService {
     });
     const newUser = await new UserRepository().findById(userId[0]);
     reply.status(201).send(newUser);
+  }
+
+  async update(
+    request: FastifyRequest<{
+      Body: UserBodyUpdateType;
+      Params: BaseParamType;
+    }>,
+    reply: FastifyReply,
+  ) {
+    const { id } = request.params;
+    const parsedId = Number(id);
+    const { email, language_id, name, password } = request.body;
+    await new UserRepository().update(parsedId, {
+      email,
+      name,
+      password,
+      language_id,
+    });
+    const updatedUser = await new UserRepository().findById(parsedId);
+    reply.status(200).send(updatedUser);
   }
 }

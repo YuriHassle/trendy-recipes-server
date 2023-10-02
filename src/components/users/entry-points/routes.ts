@@ -4,10 +4,17 @@ import {
   User,
   Users,
   UserType,
-  UserBody,
-  UserBodyType,
+  UserBodyAdd,
+  UserBodyAddType,
+  UserBodyUpdate,
+  UserBodyUpdateType,
 } from '../domain/schema';
-import { BaseQuery, BaseQueryType } from '../../../common/baseSchema';
+import {
+  BaseQuery,
+  BaseQueryType,
+  BaseParam,
+  BaseParamType,
+} from '../../../common/baseSchema';
 
 export default async function userRouter(fastify: FastifyInstance) {
   fastify.get<{ Querystring: BaseQueryType; Reply: UserType[] }>(
@@ -23,16 +30,34 @@ export default async function userRouter(fastify: FastifyInstance) {
     new UserService().findAll,
   );
 
-  fastify.post<{ Body: UserBodyType; Reply: UserType }>(
+  fastify.post<{ Body: UserBodyAddType; Reply: UserType }>(
     '/',
     {
       schema: {
-        body: UserBody,
+        body: UserBodyAdd,
         response: {
           201: User,
         },
       },
     },
     new UserService().create,
+  );
+
+  fastify.put<{
+    Body: UserBodyUpdateType;
+    Reply: UserType;
+    Params: BaseParamType;
+  }>(
+    '/:id',
+    {
+      schema: {
+        params: BaseParam,
+        body: UserBodyUpdate,
+        response: {
+          200: User,
+        },
+      },
+    },
+    new UserService().update,
   );
 }
