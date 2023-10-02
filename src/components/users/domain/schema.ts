@@ -1,4 +1,5 @@
 import { Static, Type } from '@sinclair/typebox';
+import VM from '../../../common/ValidationMessages';
 
 export const User = Type.Object({
   id: Type.Number(),
@@ -17,7 +18,14 @@ export const Users = Type.Array(User);
 
 export const UserBody = Type.Object({
   name: Type.String(),
-  email: Type.String({ format: 'email' }),
+  email: Type.String({
+    format: 'email',
+    minLength: 10,
+    errorMessage: {
+      format: VM.format('email'),
+      minLength: VM.minLength('email', 5),
+    },
+  }),
   password: Type.String(),
   language_id: Type.Number(),
   points: Type.Optional(Type.Number()),
