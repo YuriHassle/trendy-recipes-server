@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import UserService from '../domain/services';
+import UserService from '../domain/UserService';
 import {
   User,
   Users,

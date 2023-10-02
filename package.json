@@ -29,6 +29,7 @@
   "dependencies": {
     "@fastify/type-provider-typebox": "^3.5.0",
     "@sinclair/typebox": "^0.31.17",
+    "ajv-errors": "^3.0.0",
     "dotenv": "^16.3.1",
     "fastify": "^4.23.2",
     "knex": "^2.5.1",
