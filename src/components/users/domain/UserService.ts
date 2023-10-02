@@ -1,4 +1,4 @@
-import UserRepository from '../data-access/repository';
+import UserRepository from '../data-access/UserRepository';
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { BaseQueryType } from '../../../common/baseSchema';
 import { UserBodyType } from './schema';
@@ -10,8 +10,8 @@ export default class UserService {
   ) {
     const { limit, offset, orderBy, orderDirection } = request.query;
     const users = await new UserRepository().findAll({
-      limit,
-      offset,
+      limit: Number(limit) || undefined,
+      offset: Number(offset) || undefined,
       orderBy,
       orderDirection,
     });

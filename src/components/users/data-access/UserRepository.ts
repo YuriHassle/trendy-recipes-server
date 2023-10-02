@@ -1,6 +1,6 @@
 import getDBConnection from '../../../database/config';
 import { UserType } from '../domain/schema';
-import BaseRepository from '../../../common/baseRepository';
+import BaseRepository from '../../../common/BaseRepository';
 
 export default class UserRepository extends BaseRepository<UserType> {
   constructor() {
