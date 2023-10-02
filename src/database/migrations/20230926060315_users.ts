@@ -6,9 +6,9 @@ export async function up(knex: Knex): Promise<void> {
     table.integer('language_id').unsigned().notNullable();
     table.foreign('language_id').references('id').inTable('languages');
     table.string('name', 100).notNullable();
-    table.string('email', 100).notNullable();
+    table.string('email', 100).notNullable().unique();
     table.string('password', 100).notNullable();
-    table.integer('points').notNullable();
+    table.integer('points').notNullable().defaultTo(0);
     table.string('avatar', 200);
     table.boolean('active').notNullable().defaultTo(true);
     table.timestamps(true, true);
