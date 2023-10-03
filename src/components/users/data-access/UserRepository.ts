@@ -1,10 +1,13 @@
 import getDBConnection from '../../../database/config';
-import { UserType } from '../domain/schema';
+import { UserType, UsersType } from '../domain/UserSchema';
 import BaseRepository from '../../../common/BaseRepository';
 
-export default class UserRepository extends BaseRepository<UserType> {
+export default class UserRepository extends BaseRepository<
+  UserType,
+  UsersType
+> {
   constructor() {
-    super(getDBConnection()<UserType>('users'));
+    super(getDBConnection()<UserType, UsersType>('users'));
   }
 
   async findByEmail(email: string) {

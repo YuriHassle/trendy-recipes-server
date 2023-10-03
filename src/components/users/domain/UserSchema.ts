@@ -1,12 +1,12 @@
-import { Static, Type } from '@sinclair/typebox';
+import { Type } from '@sinclair/typebox';
 import VM from '../../../common/ValidationMessages';
+import BaseSchema from '../../../common/BaseSchema';
 
 export const User = Type.Object({
   id: Type.Number(),
   language_id: Type.Number(),
   name: Type.String(),
   email: Type.String({ format: 'email' }),
-  password: Type.String(),
   points: Type.Number(),
   avatar: Type.Optional(Type.String()),
   active: Type.Boolean(),
@@ -43,10 +43,26 @@ export const UserBodyUpdate = Type.Object({
       },
     }),
   ),
-  password: Type.Optional(Type.String()),
   language_id: Type.Optional(Type.Number()),
 });
 
-export type UserType = Static<typeof User>;
-export type UserBodyAddType = Static<typeof UserBodyAdd>;
-export type UserBodyUpdateType = Static<typeof UserBodyUpdate>;
+export type UserType = typeof User;
+export type UsersType = typeof Users;
+export type UserBodyAddType = typeof UserBodyAdd;
+export type UserBodyUpdateType = typeof UserBodyUpdate;
+
+export default class UserSchema extends BaseSchema<
+  UserType,
+  UsersType,
+  UserBodyAddType,
+  UserBodyUpdateType
+> {
+  constructor() {
+    super({
+      replySingle: User,
+      replyAll: Users,
+      bodyAdd: UserBodyAdd,
+      bodyUpdate: UserBodyUpdate,
+    });
+  }
+}

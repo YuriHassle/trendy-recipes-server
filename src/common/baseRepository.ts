@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 
-export default class BaseRepository<T> {
+export default class BaseRepository<ReplySingle, ReplyAll> {
   readonly entity: Knex.QueryBuilder;
 
   constructor(entity: Knex.QueryBuilder) {
@@ -12,7 +12,7 @@ export default class BaseRepository<T> {
     offset = 0,
     orderBy = 'updated_at',
     orderDirection = 'desc',
-  } = {}): Promise<T[]> {
+  } = {}): Promise<ReplyAll> {
     return this.entity
       .select('*')
       .limit(limit)
@@ -20,15 +20,15 @@ export default class BaseRepository<T> {
       .orderBy(orderBy, orderDirection);
   }
 
-  async findById(id: number): Promise<T> {
+  async findById(id: number): Promise<ReplySingle> {
     return this.entity.select('*').where({ id }).first();
   }
 
-  async create(payload: Partial<T>): Promise<number[]> {
+  async create(payload: Partial<ReplySingle>): Promise<number[]> {
     return this.entity.insert(payload);
   }
 
-  async update(id: number, payload: Partial<T>): Promise<number> {
+  async update(id: number, payload: Partial<ReplySingle>): Promise<number> {
     return this.entity.update(payload).where({ id });
   }
 

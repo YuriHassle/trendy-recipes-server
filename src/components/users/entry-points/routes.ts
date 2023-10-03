@@ -1,63 +1,29 @@
 import { FastifyInstance } from 'fastify';
 import UserService from '../domain/UserService';
-import {
-  User,
-  Users,
-  UserType,
-  UserBodyAdd,
-  UserBodyAddType,
-  UserBodyUpdate,
-  UserBodyUpdateType,
-} from '../domain/schema';
-import {
-  BaseQuery,
-  BaseQueryType,
-  BaseParam,
-  BaseParamType,
-} from '../../../common/baseSchema';
+import UserSchema from '../domain/UserSchema';
 
 export default async function userRouter(fastify: FastifyInstance) {
-  fastify.get<{ Querystring: BaseQueryType; Reply: UserType[] }>(
+  fastify.get(
     '/',
-    {
-      schema: {
-        querystring: BaseQuery,
-        response: {
-          200: Users,
-        },
-      },
-    },
+    { schema: new UserSchema().getFindAllSchema() },
     new UserService().findAll,
   );
 
-  fastify.post<{ Body: UserBodyAddType; Reply: UserType }>(
+  fastify.post(
     '/',
-    {
-      schema: {
-        body: UserBodyAdd,
-        response: {
-          201: User,
-        },
-      },
-    },
+    { schema: new UserSchema().getCreateSchema() },
     new UserService().create,
   );
 
-  fastify.put<{
-    Body: UserBodyUpdateType;
-    Reply: UserType;
-    Params: BaseParamType;
-  }>(
+  fastify.put(
     '/:id',
-    {
-      schema: {
-        params: BaseParam,
-        body: UserBodyUpdate,
-        response: {
-          200: User,
-        },
-      },
-    },
+    { schema: new UserSchema().getUpdateSchema() },
     new UserService().update,
+  );
+
+  fastify.delete(
+    '/:id',
+    { schema: new UserSchema().getDeleteSchema() },
+    new UserService().delete,
   );
 }
