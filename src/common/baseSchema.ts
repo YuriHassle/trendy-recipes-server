@@ -101,6 +101,7 @@ export default class BaseSchema<
       body: this.bodyUpdate,
       response: {
         200: this.replySingle,
+        400: this.replyMessage,
       },
     };
   }
@@ -110,6 +111,7 @@ export default class BaseSchema<
       params: this.params,
       response: {
         200: this.replyMessage,
+        400: this.replyMessage,
       },
     };
   }

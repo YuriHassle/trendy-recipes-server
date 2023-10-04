@@ -33,6 +33,6 @@ export default class BaseRepository<ReplySingle, ReplyAll> {
   }
 
   async delete(id: number): Promise<number> {
-    return this.entity.delete().where({ id });
+    return this.entity.del().where({ id });
   }
 }

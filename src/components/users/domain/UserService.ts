@@ -1,6 +1,6 @@
-import { Static } from '@sinclair/typebox';
+import { Static, TSchema } from '@sinclair/typebox';
 import UserRepository from '../data-access/UserRepository';
-import { FastifyRequest, RouteGenericInterface } from 'fastify';
+import { FastifyRequest } from 'fastify';
 import {
   BaseQueryType,
   BaseParamType,
@@ -10,32 +10,31 @@ import {
 import {
   UserType,
   UserBodyAddType,
-  UserBodyUpdateType,
   UsersType,
+  UserBodyUpdateType,
 } from './UserSchema';
 import RM from '../../../common/ResponseMessages';
+import { serializeResponse } from '../../../common/serializer';
 
-// TODO: refactor this to be reusable
-interface MessageReply extends RouteGenericInterface {
+interface UserRequest<CustomBody extends TSchema = never> {
+  Body: CustomBody;
   Params: Static<BaseParamType>;
-  Reply: Static<BaseMessageType>;
-}
-interface UserReply extends RouteGenericInterface {
-  Body: Static<UserBodyAddType>;
-  Params: Static<BaseParamType>;
-  Reply: UserType;
-}
-interface UsersReply extends RouteGenericInterface {
   Querystring: Static<BaseQueryType>;
-  Reply: UsersType;
+}
+
+interface UserReply<
+  CustomReply extends TSchema,
+  CustomBody extends TSchema = never,
+> extends UserRequest<CustomBody> {
+  Reply: Static<CustomReply>;
 }
 
 const entityName = 'User';
 
 export default class UserService {
   async findAll(
-    request: FastifyRequest<{ Querystring: Static<BaseQueryType> }>,
-    reply: FastifyCustomReply<UsersReply>,
+    request: FastifyRequest<UserRequest>,
+    reply: FastifyCustomReply<UserReply<UsersType>>,
   ) {
     const { offset, orderBy, orderDirection, limit } = request.query;
     const users = await new UserRepository().findAll({
@@ -44,12 +43,12 @@ export default class UserService {
       orderBy,
       orderDirection,
     });
-    reply.status(200).send(users);
+    reply.status(200).send(serializeResponse<UsersType>(users));
   }
 
   async create(
-    request: FastifyRequest<{ Body: Static<UserBodyAddType> }>,
-    reply: FastifyCustomReply<UserReply>,
+    request: FastifyRequest<UserRequest<UserBodyAddType>>,
+    reply: FastifyCustomReply<UserReply<UserType, UserBodyAddType>>,
   ) {
     const { email, language_id, name, password, points } = request.body;
     const userId = await new UserRepository().create({
@@ -60,16 +59,14 @@ export default class UserService {
       language_id,
     });
     const newUser = await new UserRepository().findById(userId[0]);
-    // TODO: serialize response to POJO before sending to client
-    reply.status(201).send(newUser);
+    reply.status(201).send(serializeResponse<UserType>(newUser));
   }
 
   async update(
-    request: FastifyRequest<{
-      Body: Static<UserBodyUpdateType>;
-      Params: Static<BaseParamType>;
-    }>,
-    reply: FastifyCustomReply<UserReply>,
+    request: FastifyRequest<UserRequest<UserBodyUpdateType>>,
+    reply: FastifyCustomReply<
+      UserReply<UserType | BaseMessageType, UserBodyUpdateType>
+    >,
   ) {
     const { id } = request.params;
     const parsedId = Number(id);
@@ -80,16 +77,34 @@ export default class UserService {
       language_id,
     });
     const updatedUser = await new UserRepository().findById(parsedId);
-    reply.status(200).send(updatedUser);
+    if (!updatedUser) {
+      reply.status(400).send(
+        serializeResponse<BaseMessageType>({
+          message: RM.notFound(entityName, parsedId),
+        }),
+      );
+    }
+    reply.status(200).send(serializeResponse<UserType>(updatedUser));
   }
 
   async delete(
-    request: FastifyRequest<{ Params: Static<BaseParamType> }>,
-    reply: FastifyCustomReply<MessageReply>,
+    request: FastifyRequest<UserRequest>,
+    reply: FastifyCustomReply<UserReply<BaseMessageType>>,
   ) {
     const { id } = request.params;
     const parsedId = Number(id);
-    await new UserRepository().delete(parsedId);
-    reply.status(200).send({ message: RM.delete(entityName, parsedId) });
+    const isDeleted = await new UserRepository().delete(parsedId);
+    if (!isDeleted) {
+      reply.status(400).send(
+        serializeResponse<BaseMessageType>({
+          message: RM.notFound(entityName, parsedId),
+        }),
+      );
+    }
+    reply.status(200).send(
+      serializeResponse<BaseMessageType>({
+        message: RM.delete(entityName, parsedId),
+      }),
+    );
   }
 }
