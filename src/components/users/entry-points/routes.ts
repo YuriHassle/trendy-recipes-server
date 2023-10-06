@@ -3,33 +3,38 @@ import UserService from '../domain/UserService';
 import UserSchema from '../domain/UserSchema';
 
 export default async function userRouter(fastify: FastifyInstance) {
-  fastify.get(
-    '/:id',
-    { schema: new UserSchema().getFindOneSchema() },
-    new UserService().findOne,
-  );
+  fastify.route({
+    method: 'GET',
+    url: '/:id',
+    schema: new UserSchema().getFindOneSchema(),
+    handler: new UserService().findOne,
+  });
 
-  fastify.get(
-    '/',
-    { schema: new UserSchema().getFindAllSchema() },
-    new UserService().findAll,
-  );
+  fastify.route({
+    method: 'GET',
+    url: '/',
+    schema: new UserSchema().getFindAllSchema(),
+    handler: new UserService().findAll,
+  });
 
-  fastify.post(
-    '/',
-    { schema: new UserSchema().getCreateSchema() },
-    new UserService().create,
-  );
+  fastify.route({
+    method: 'POST',
+    url: '/',
+    schema: new UserSchema().getCreateSchema(),
+    handler: new UserService().create,
+  });
 
-  fastify.put(
-    '/:id',
-    { schema: new UserSchema().getUpdateSchema() },
-    new UserService().update,
-  );
+  fastify.route({
+    method: 'PUT',
+    url: '/:id',
+    schema: new UserSchema().getUpdateSchema(),
+    handler: new UserService().update,
+  });
 
-  fastify.delete(
-    '/:id',
-    { schema: new UserSchema().getDeleteSchema() },
-    new UserService().delete,
-  );
+  fastify.route({
+    method: 'DELETE',
+    url: '/:id',
+    schema: new UserSchema().getDeleteSchema(),
+    handler: new UserService().delete,
+  });
 }
