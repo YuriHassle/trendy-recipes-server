@@ -17,7 +17,7 @@ import RM from '../../../common/ResponseMessages';
 import { serializeResponse } from '../../../common/serializer';
 
 interface UserRequest<CustomBody extends TSchema = never> {
-  Body: CustomBody;
+  Body: Static<CustomBody>;
   Params: Static<BaseParamType>;
   Querystring: Static<BaseQueryType>;
 }
@@ -55,8 +55,8 @@ export default class UserService {
   ) {
     const { offset, orderBy, orderDirection, limit } = request.query;
     const users = await new UserRepository().findAll({
-      limit: Number(limit) || undefined,
-      offset: Number(offset) || undefined,
+      limit: Number(limit),
+      offset: Number(offset),
       orderBy,
       orderDirection,
     });
