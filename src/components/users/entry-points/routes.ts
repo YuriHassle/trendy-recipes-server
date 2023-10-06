@@ -4,6 +4,12 @@ import UserSchema from '../domain/UserSchema';
 
 export default async function userRouter(fastify: FastifyInstance) {
   fastify.get(
+    '/:id',
+    { schema: new UserSchema().getFindOneSchema() },
+    new UserService().findOne,
+  );
+
+  fastify.get(
     '/',
     { schema: new UserSchema().getFindAllSchema() },
     new UserService().findAll,

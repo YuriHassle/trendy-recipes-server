@@ -32,6 +32,23 @@ interface UserReply<
 const entityName = 'User';
 
 export default class UserService {
+  async findOne(
+    request: FastifyRequest<UserRequest>,
+    reply: FastifyCustomReply<UserReply<UserType | BaseMessageType>>,
+  ) {
+    const { id } = request.params;
+    const parsedId = Number(id);
+    const user = await new UserRepository().findById(parsedId);
+    if (!user) {
+      reply.status(400).send(
+        serializeResponse<BaseMessageType>({
+          message: RM.notFound(entityName, parsedId),
+        }),
+      );
+    }
+    reply.status(200).send(serializeResponse<UserType>(user));
+  }
+
   async findAll(
     request: FastifyRequest<UserRequest>,
     reply: FastifyCustomReply<UserReply<UsersType>>,

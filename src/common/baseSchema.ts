@@ -77,6 +77,16 @@ export default class BaseSchema<
     this.query = query;
   }
 
+  getFindOneSchema() {
+    return {
+      params: this.params,
+      response: {
+        200: this.replySingle,
+        400: this.replyMessage,
+      },
+    };
+  }
+
   getFindAllSchema() {
     return {
       querystring: this.query,
