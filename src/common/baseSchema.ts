@@ -43,7 +43,7 @@ export default class BaseSchema<
   Params = BaseParamType,
   Query = BaseQueryType,
 > {
-  readonly replySingle: ReplySingle;
+  readonly replySingle?: ReplySingle;
   readonly replyAll?: ReplyAll;
   readonly bodyAdd?: BodyAdd;
   readonly bodyUpdate?: BodyUpdate;
@@ -60,7 +60,7 @@ export default class BaseSchema<
     params = BaseParam,
     query = BaseQuery,
   }: {
-    replySingle: ReplySingle;
+    replySingle?: ReplySingle;
     replyAll?: ReplyAll;
     bodyAdd?: BodyAdd;
     bodyUpdate?: BodyUpdate;
