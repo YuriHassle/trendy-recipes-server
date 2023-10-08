@@ -7,7 +7,7 @@ export async function up(knex: Knex): Promise<void> {
     table.foreign('user_id').references('id').inTable('users');
     table.integer('recipe_id').unsigned().notNullable();
     table.foreign('recipe_id').references('id').inTable('recipes');
-    table.string('name', 100).notNullable();
+    table.string('title', 100).notNullable();
     table.string('description', 100).notNullable();
     table.string('ingredients', 1000).notNullable();
     table.string('preparation', 5000).notNullable();
