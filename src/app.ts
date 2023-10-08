@@ -16,6 +16,7 @@ const server = fastify().withTypeProvider<TypeBoxTypeProvider>();
 server.setValidatorCompiler(({ schema }) => ajv.compile(schema));
 server.register(userRouter, { prefix: '/users' });
 server.register(videoRouter, { prefix: '/videos' });
+server.register(videoRouter, { prefix: '/languages' });
 
 server.listen({ port: 3000, host: '127.0.0.1' }, (err, address) => {
   if (err) {
