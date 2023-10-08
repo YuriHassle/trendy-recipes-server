@@ -1,5 +1,5 @@
 import knex, { Knex } from 'knex';
-import { DB_CLIENT } from '../common/constants';
+import { DB_CLIENT } from '../utils/constants';
 import dotenv from 'dotenv';
 dotenv.config();
 

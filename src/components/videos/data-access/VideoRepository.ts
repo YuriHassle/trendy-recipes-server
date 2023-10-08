@@ -1,12 +1,9 @@
 import getDBConnection from '../../../database/config';
-import { VideoType, VideosType } from '../domain/VideoSchema';
-import BaseRepository from '../../../common/BaseRepository';
+import { Video } from './model';
+import BaseRepository from '../../../generators/BaseRepository';
 
-export default class VideoRepository extends BaseRepository<
-  VideoType,
-  VideosType
-> {
+export default class VideoRepository extends BaseRepository<Video> {
   constructor() {
-    super(getDBConnection()<VideoType, VideosType>('videos'));
+    super(getDBConnection()('videos'));
   }
 }

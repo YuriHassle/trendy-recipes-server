@@ -1,5 +1,5 @@
-import { Type } from '@sinclair/typebox';
-import BaseSchema from '../../../common/BaseSchema';
+import { Static, Type } from '@sinclair/typebox';
+import BaseSchema from '../../../generators/BaseSchema';
 
 enum VideoSource {
   tiktok = 'tiktok',
@@ -26,21 +26,21 @@ export const VideoBodyUpdate = Type.Object({
   source: Type.Optional(Type.Enum(VideoSource)),
 });
 
-export type VideoType = typeof Video;
-export type VideosType = typeof Videos;
-export type VideoBodyAddType = typeof VideoBodyAdd;
-export type VideoBodyUpdateType = typeof VideoBodyUpdate;
+export type VideoType = Static<typeof Video>;
+export type VideosType = Static<typeof Videos>;
+export type VideoBodyAddType = Static<typeof VideoBodyAdd>;
+export type VideoBodyUpdateType = Static<typeof VideoBodyUpdate>;
 
 export default class VideoSchema extends BaseSchema<
-  VideoType,
-  VideosType,
-  VideoBodyAddType,
-  VideoBodyUpdateType
+  typeof Video,
+  typeof Videos,
+  typeof VideoBodyAdd,
+  typeof VideoBodyUpdate
 > {
   constructor() {
     super({
       replySingle: Video,
-      replyAll: Videos,
+      replyMany: Videos,
       bodyAdd: VideoBodyAdd,
       bodyUpdate: VideoBodyUpdate,
     });

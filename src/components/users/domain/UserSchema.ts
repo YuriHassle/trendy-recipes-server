@@ -1,6 +1,6 @@
-import { Type } from '@sinclair/typebox';
-import VM from '../../../common/ValidationMessages';
-import BaseSchema from '../../../common/BaseSchema';
+import { Static, Type } from '@sinclair/typebox';
+import VM from '../../../messages/ValidationMessages';
+import BaseSchema from '../../../generators/BaseSchema';
 
 export const User = Type.Object({
   id: Type.Number(),
@@ -46,21 +46,21 @@ export const UserBodyUpdate = Type.Object({
   language_id: Type.Optional(Type.Number()),
 });
 
-export type UserType = typeof User;
-export type UsersType = typeof Users;
-export type UserBodyAddType = typeof UserBodyAdd;
-export type UserBodyUpdateType = typeof UserBodyUpdate;
+export type UserType = Static<typeof User>;
+export type UsersType = Static<typeof Users>;
+export type UserBodyAddType = Static<typeof UserBodyAdd>;
+export type UserBodyUpdateType = Static<typeof UserBodyUpdate>;
 
 export default class UserSchema extends BaseSchema<
-  UserType,
-  UsersType,
-  UserBodyAddType,
-  UserBodyUpdateType
+  typeof User,
+  typeof Users,
+  typeof UserBodyAdd,
+  typeof UserBodyUpdate
 > {
   constructor() {
     super({
       replySingle: User,
-      replyAll: Users,
+      replyMany: Users,
       bodyAdd: UserBodyAdd,
       bodyUpdate: UserBodyUpdate,
     });

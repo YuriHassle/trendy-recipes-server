@@ -1,4 +1,3 @@
-import { Type } from '@sinclair/typebox';
 import {
   FastifyReply,
   RawReplyDefaultExpression,
@@ -6,30 +5,7 @@ import {
   RawServerDefault,
 } from 'fastify';
 import { RouteGenericInterface } from 'fastify/types/route';
-
-enum OrderDirection {
-  asc = 'asc',
-  desc = 'desc',
-}
-
-export const BaseQuery = Type.Object({
-  limit: Type.Optional(Type.String()),
-  offset: Type.Optional(Type.String()),
-  orderBy: Type.Optional(Type.String()),
-  orderDirection: Type.Optional(Type.Enum(OrderDirection)),
-});
-
-export const BaseParam = Type.Object({
-  id: Type.String(),
-});
-
-export const BaseMessage = Type.Object({
-  message: Type.String(),
-});
-
-export type BaseQueryType = typeof BaseQuery;
-export type BaseParamType = typeof BaseParam;
-export type BaseMessageType = typeof BaseMessage;
+import { DefaultMessage, DefaultParam, DefaultQuery } from '../utils/schemas';
 
 export interface FastifyCustomReply<CustomReply extends RouteGenericInterface>
   extends FastifyReply<
@@ -41,40 +17,40 @@ export interface FastifyCustomReply<CustomReply extends RouteGenericInterface>
 
 export default class BaseSchema<
   ReplySingle,
-  ReplyAll,
+  ReplyMany,
   BodyAdd,
   BodyUpdate,
-  ReplyMessage = BaseMessageType,
-  Params = BaseParamType,
-  Query = BaseQueryType,
+  ReplyMessage = typeof DefaultMessage,
+  Params = typeof DefaultParam,
+  Query = typeof DefaultQuery,
 > {
   readonly replySingle?: ReplySingle;
-  readonly replyAll?: ReplyAll;
+  readonly replyMany?: ReplyMany;
   readonly bodyAdd?: BodyAdd;
   readonly bodyUpdate?: BodyUpdate;
-  readonly replyMessage?: ReplyMessage | BaseMessageType;
-  readonly params?: Params | BaseParamType;
-  readonly query?: Query | BaseQueryType;
+  readonly replyMessage?: ReplyMessage | typeof DefaultMessage;
+  readonly params?: Params | typeof DefaultParam;
+  readonly query?: Query | typeof DefaultQuery;
 
   constructor({
     replySingle,
-    replyAll,
+    replyMany,
     bodyAdd,
     bodyUpdate,
-    replyMessage = BaseMessage,
-    params = BaseParam,
-    query = BaseQuery,
+    replyMessage = DefaultMessage,
+    params = DefaultParam,
+    query = DefaultQuery,
   }: {
     replySingle?: ReplySingle;
-    replyAll?: ReplyAll;
+    replyMany?: ReplyMany;
     bodyAdd?: BodyAdd;
     bodyUpdate?: BodyUpdate;
-    replyMessage?: ReplyMessage | BaseMessageType;
-    params?: Params | BaseParamType;
-    query?: Query | BaseQueryType;
+    replyMessage?: ReplyMessage | typeof DefaultMessage;
+    params?: Params | typeof DefaultParam;
+    query?: Query | typeof DefaultQuery;
   }) {
     this.replySingle = replySingle;
-    this.replyAll = replyAll;
+    this.replyMany = replyMany;
     this.bodyAdd = bodyAdd;
     this.bodyUpdate = bodyUpdate;
     this.replyMessage = replyMessage;
@@ -96,7 +72,7 @@ export default class BaseSchema<
     return {
       querystring: this.query,
       response: {
-        200: this.replyAll,
+        200: this.replyMany,
       },
     };
   }
