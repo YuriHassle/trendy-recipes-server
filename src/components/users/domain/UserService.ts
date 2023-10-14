@@ -6,12 +6,7 @@ import {
   DefaultParamType,
   DefaultQueryType,
 } from '../../../utils/schemas';
-import {
-  UserType,
-  UserBodyAddType,
-  UsersType,
-  UserBodyUpdateType,
-} from './UserSchema';
+import { UserType, UserBodyAddType, UsersType, UserBodyUpdateType } from './UserSchema';
 import RM from '../../../messages/ResponseMessages';
 
 interface UserRequest<CustomBody = never> {
@@ -20,8 +15,7 @@ interface UserRequest<CustomBody = never> {
   Querystring: DefaultQueryType;
 }
 
-interface UserReply<CustomReply, CustomBody = never>
-  extends UserRequest<CustomBody> {
+interface UserReply<CustomReply, CustomBody = never> extends UserRequest<CustomBody> {
   Reply: CustomReply;
 }
 
