@@ -20,42 +20,42 @@ export default class BaseSchema<
   ReplyMany,
   BodyAdd,
   BodyUpdate,
-  ReplyMessage = typeof DefaultMessage,
-  Params = typeof DefaultParam,
-  Query = typeof DefaultQuery,
+  ReplyMessage = never,
+  Params = never,
+  Query = never,
 > {
   readonly replySingle?: ReplySingle;
   readonly replyMany?: ReplyMany;
   readonly bodyAdd?: BodyAdd;
   readonly bodyUpdate?: BodyUpdate;
-  readonly replyMessage?: ReplyMessage | typeof DefaultMessage;
-  readonly params?: Params | typeof DefaultParam;
-  readonly query?: Query | typeof DefaultQuery;
+  readonly replyMessage: ReplyMessage | typeof DefaultMessage;
+  readonly params: Params | typeof DefaultParam;
+  readonly query: Query | typeof DefaultQuery;
 
   constructor({
     replySingle,
     replyMany,
     bodyAdd,
     bodyUpdate,
-    replyMessage = DefaultMessage,
-    params = DefaultParam,
-    query = DefaultQuery,
+    replyMessage,
+    params,
+    query,
   }: {
     replySingle?: ReplySingle;
     replyMany?: ReplyMany;
     bodyAdd?: BodyAdd;
     bodyUpdate?: BodyUpdate;
-    replyMessage?: ReplyMessage | typeof DefaultMessage;
-    params?: Params | typeof DefaultParam;
-    query?: Query | typeof DefaultQuery;
+    replyMessage?: ReplyMessage;
+    params?: Params;
+    query?: Query;
   }) {
     this.replySingle = replySingle;
     this.replyMany = replyMany;
     this.bodyAdd = bodyAdd;
     this.bodyUpdate = bodyUpdate;
-    this.replyMessage = replyMessage;
-    this.params = params;
-    this.query = query;
+    this.replyMessage = replyMessage || DefaultMessage;
+    this.params = params || DefaultParam;
+    this.query = query || DefaultQuery;
   }
 
   getFindOneSchema() {
