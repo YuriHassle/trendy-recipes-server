@@ -15,7 +15,7 @@ export interface FastifyCustomReply<CustomReply extends RouteGenericInterface>
     CustomReply
   > {}
 
-export default class BaseSchema<
+export default abstract class BaseSchema<
   ReplySingle,
   ReplyMany,
   BodyAdd,

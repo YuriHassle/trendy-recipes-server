@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 
-export default class BaseRepository<Reply> {
+export default abstract class BaseRepository<Reply> {
   readonly entity: Knex.QueryBuilder;
 
   constructor(entity: Knex.QueryBuilder) {
@@ -28,10 +28,7 @@ export default class BaseRepository<Reply> {
     return this.entity.insert(payload);
   }
 
-  async update(
-    id: number,
-    payload: Omit<Partial<Reply>, 'id'>,
-  ): Promise<number> {
+  async update(id: number, payload: Omit<Partial<Reply>, 'id'>): Promise<number> {
     return this.entity.update(payload).where({ id });
   }
 
