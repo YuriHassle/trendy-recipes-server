@@ -27,7 +27,6 @@ export const VideoBodyUpdate = Type.Object({
 });
 
 export type VideoType = Static<typeof Video>;
-export type VideosType = Static<typeof Videos>;
 export type VideoBodyAddType = Static<typeof VideoBodyAdd>;
 export type VideoBodyUpdateType = Static<typeof VideoBodyUpdate>;
 

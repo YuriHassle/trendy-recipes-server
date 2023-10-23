@@ -47,7 +47,6 @@ export const UserBodyUpdate = Type.Object({
 });
 
 export type UserType = Static<typeof User>;
-export type UsersType = Static<typeof Users>;
 export type UserBodyAddType = Static<typeof UserBodyAdd>;
 export type UserBodyUpdateType = Static<typeof UserBodyUpdate>;
 
