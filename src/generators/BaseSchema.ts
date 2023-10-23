@@ -3,16 +3,32 @@ import {
   RawReplyDefaultExpression,
   RawRequestDefaultExpression,
   RawServerDefault,
+  RequestGenericInterface,
 } from 'fastify';
 import { RouteGenericInterface } from 'fastify/types/route';
-import { DefaultMessage, DefaultParam, DefaultQuery } from '../utils/schemas';
+import {
+  DefaultMessage,
+  DefaultParam,
+  DefaultQuery,
+  DefaultParamType,
+  DefaultQueryType,
+} from '../utils/schemas';
 
-export interface FastifyCustomReply<CustomReply extends RouteGenericInterface>
+export interface DefaultRequest<CustomBody = never> extends RequestGenericInterface {
+  Body: CustomBody;
+  Params: DefaultParamType;
+  Querystring: DefaultQueryType;
+}
+
+export interface DefaultReply<CustomReply> extends DefaultRequest {
+  Reply: CustomReply;
+}
+export interface FastifyCustomReply<DefaultReply extends RouteGenericInterface>
   extends FastifyReply<
     RawServerDefault,
     RawRequestDefaultExpression,
     RawReplyDefaultExpression,
-    CustomReply
+    DefaultReply
   > {}
 
 export default abstract class BaseSchema<

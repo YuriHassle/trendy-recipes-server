@@ -1,30 +1,20 @@
 import UserRepository from '../data-access/UserRepository';
 import { FastifyRequest } from 'fastify';
-import { FastifyCustomReply } from '../../../generators/BaseSchema';
 import {
-  DefaultMessageType,
-  DefaultParamType,
-  DefaultQueryType,
-} from '../../../utils/schemas';
-import { UserType, UserBodyAddType, UsersType, UserBodyUpdateType } from './UserSchema';
+  FastifyCustomReply,
+  DefaultReply,
+  DefaultRequest,
+} from '../../../generators/BaseSchema';
+import { DefaultMessageType } from '../../../utils/schemas';
+import { UserBodyAddType, UserType, UserBodyUpdateType } from './UserSchema';
 import RM from '../../../messages/ResponseMessages';
-
-interface UserRequest<CustomBody = never> {
-  Body: CustomBody;
-  Params: DefaultParamType;
-  Querystring: DefaultQueryType;
-}
-
-interface UserReply<CustomReply, CustomBody = never> extends UserRequest<CustomBody> {
-  Reply: CustomReply;
-}
 
 const entityName = 'User';
 
 export default class UserService {
   async findOne(
-    request: FastifyRequest<UserRequest>,
-    reply: FastifyCustomReply<UserReply<UserType | DefaultMessageType>>,
+    request: FastifyRequest<DefaultRequest>,
+    reply: FastifyCustomReply<DefaultReply<UserType | DefaultMessageType>>,
   ) {
     const { id } = request.params;
     const parsedId = Number(id);
@@ -38,8 +28,8 @@ export default class UserService {
   }
 
   async findAll(
-    request: FastifyRequest<UserRequest>,
-    reply: FastifyCustomReply<UserReply<UsersType>>,
+    request: FastifyRequest<DefaultRequest>,
+    reply: FastifyCustomReply<DefaultReply<UserType[]>>,
   ) {
     const { offset, orderBy, orderDirection, limit } = request.query;
     const users = await new UserRepository().findAll({
@@ -52,8 +42,8 @@ export default class UserService {
   }
 
   async create(
-    request: FastifyRequest<UserRequest<UserBodyAddType>>,
-    reply: FastifyCustomReply<UserReply<UserType, UserBodyAddType>>,
+    request: FastifyRequest<DefaultRequest<UserBodyAddType>>,
+    reply: FastifyCustomReply<DefaultReply<UserType>>,
   ) {
     const { email, language_id, name, password, points } = request.body;
     const userId = await new UserRepository().create({
@@ -68,10 +58,8 @@ export default class UserService {
   }
 
   async update(
-    request: FastifyRequest<UserRequest<UserBodyUpdateType>>,
-    reply: FastifyCustomReply<
-      UserReply<UserType | DefaultMessageType, UserBodyUpdateType>
-    >,
+    request: FastifyRequest<DefaultRequest<UserBodyUpdateType>>,
+    reply: FastifyCustomReply<DefaultReply<UserType | DefaultMessageType>>,
   ) {
     const { id } = request.params;
     const parsedId = Number(id);
@@ -91,8 +79,8 @@ export default class UserService {
   }
 
   async delete(
-    request: FastifyRequest<UserRequest>,
-    reply: FastifyCustomReply<UserReply<DefaultMessageType>>,
+    request: FastifyRequest<DefaultRequest>,
+    reply: FastifyCustomReply<DefaultReply<DefaultMessageType>>,
   ) {
     const { id } = request.params;
     const parsedId = Number(id);

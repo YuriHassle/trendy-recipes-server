@@ -1,36 +1,20 @@
-import { FastifyCustomReply } from '../../../generators/BaseSchema';
-import { FastifyRequest } from 'fastify';
 import {
-  VideoBodyAddType,
-  VideoBodyUpdateType,
-  VideoType,
-  VideosType,
-} from './VideoSchema';
+  FastifyCustomReply,
+  DefaultReply,
+  DefaultRequest,
+} from '../../../generators/BaseSchema';
+import { FastifyRequest } from 'fastify';
+import { VideoBodyAddType, VideoBodyUpdateType, VideoType } from './VideoSchema';
 import VideoRepository from '../data-access/VideoRepository';
 import RM from '../../../messages/ResponseMessages';
-import {
-  DefaultMessageType,
-  DefaultQueryType,
-  DefaultParamType,
-} from '../../../utils/schemas';
-
-interface VideoRequest<CustomBody = never> {
-  Body: CustomBody;
-  Params: DefaultParamType;
-  Querystring: DefaultQueryType;
-}
-
-interface VideoReply<CustomReply, CustomBody = never>
-  extends VideoRequest<CustomBody> {
-  Reply: CustomReply;
-}
+import { DefaultMessageType } from '../../../utils/schemas';
 
 const entityName = 'Video';
 
 export default class VideoService {
   async findOne(
-    request: FastifyRequest<VideoRequest>,
-    reply: FastifyCustomReply<VideoReply<VideoType | DefaultMessageType>>,
+    request: FastifyRequest<DefaultRequest>,
+    reply: FastifyCustomReply<DefaultReply<VideoType | DefaultMessageType>>,
   ) {
     const { id } = request.params;
     const parsedId = Number(id);
@@ -44,8 +28,8 @@ export default class VideoService {
   }
 
   async findAll(
-    request: FastifyRequest<VideoRequest>,
-    reply: FastifyCustomReply<VideoReply<VideosType>>,
+    request: FastifyRequest<DefaultRequest>,
+    reply: FastifyCustomReply<DefaultReply<VideoType[]>>,
   ) {
     const { offset, orderBy, orderDirection, limit } = request.query;
     const videos = await new VideoRepository().findAll({
@@ -58,8 +42,8 @@ export default class VideoService {
   }
 
   async create(
-    request: FastifyRequest<VideoRequest<VideoBodyAddType>>,
-    reply: FastifyCustomReply<VideoReply<VideoType | DefaultMessageType>>,
+    request: FastifyRequest<DefaultRequest<VideoBodyAddType>>,
+    reply: FastifyCustomReply<DefaultReply<VideoType | DefaultMessageType>>,
   ) {
     const { source, url } = request.body;
     const videoId = await new VideoRepository().create({
@@ -71,8 +55,8 @@ export default class VideoService {
   }
 
   async update(
-    request: FastifyRequest<VideoRequest<VideoBodyUpdateType>>,
-    reply: FastifyCustomReply<VideoReply<VideoType | DefaultMessageType>>,
+    request: FastifyRequest<DefaultRequest<VideoBodyUpdateType>>,
+    reply: FastifyCustomReply<DefaultReply<VideoType | DefaultMessageType>>,
   ) {
     const { id } = request.params;
     const parsedId = Number(id);
@@ -91,8 +75,8 @@ export default class VideoService {
   }
 
   async delete(
-    request: FastifyRequest<VideoRequest>,
-    reply: FastifyCustomReply<VideoReply<DefaultMessageType>>,
+    request: FastifyRequest<DefaultRequest>,
+    reply: FastifyCustomReply<DefaultReply<DefaultMessageType>>,
   ) {
     const { id } = request.params;
     const parsedId = Number(id);
