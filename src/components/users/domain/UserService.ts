@@ -20,7 +20,7 @@ export default class UserService {
     const parsedId = Number(id);
     const user = await new UserRepository().findById(parsedId);
     if (!user) {
-      reply.status(400).send({
+      reply.status(404).send({
         message: RM.notFound(entityName, parsedId),
       });
     }
@@ -71,7 +71,7 @@ export default class UserService {
     });
     const updatedUser = await new UserRepository().findById(parsedId);
     if (!updatedUser) {
-      reply.status(400).send({
+      reply.status(404).send({
         message: RM.notFound(entityName, parsedId),
       });
     }
@@ -86,7 +86,7 @@ export default class UserService {
     const parsedId = Number(id);
     const isDeleted = await new UserRepository().delete(parsedId);
     if (!isDeleted) {
-      reply.status(400).send({
+      reply.status(404).send({
         message: RM.notFound(entityName, parsedId),
       });
     }
