@@ -1,4 +1,5 @@
-import fastify from 'fastify';
+import fastify, { FastifyInstance } from 'fastify';
+import { closeDBConnection } from './database/config';
 import userRouter from './components/users/entry-points/routes';
 import videoRouter from './components/videos/entry-points/routes';
 import recipeRouter from './components/recipes/entry-points/routes';
@@ -11,16 +12,33 @@ const ajv = new AJV({ allErrors: true });
 addFormats(ajv, ['email', 'time', 'uri']).addKeyword('kind').addKeyword('modifier');
 addErrors(ajv);
 
-const server = fastify().withTypeProvider<TypeBoxTypeProvider>();
-server.setValidatorCompiler(({ schema }) => ajv.compile(schema));
-server.register(userRouter, { prefix: '/users' });
-server.register(videoRouter, { prefix: '/videos' });
-server.register(recipeRouter, { prefix: '/recipes' });
+let server: FastifyInstance;
+buildFastify();
+listenToFastify();
 
-server.listen({ port: 3000, host: '127.0.0.1' }, (err, address) => {
-  if (err) {
-    console.error(err);
-    process.exit(1);
-  }
-  console.log(`Server listening at ${address}`);
-});
+export function buildFastify() {
+  if (server) return server;
+
+  server = fastify().withTypeProvider<TypeBoxTypeProvider>();
+  server.setValidatorCompiler(({ schema }) => ajv.compile(schema));
+  server.register(userRouter, { prefix: '/users' });
+  server.register(videoRouter, { prefix: '/videos' });
+  server.register(recipeRouter, { prefix: '/recipes' });
+
+  return server;
+}
+
+export function destroyFastify() {
+  server.close();
+  closeDBConnection();
+}
+
+function listenToFastify() {
+  server.listen({ port: 3000, host: '127.0.0.1' }, (err, address) => {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
+    console.log(`Server listening at ${address}`);
+  });
+}

@@ -17,9 +17,15 @@ export const dbConfig = {
 
 let dbConnection: Knex;
 export default function getDBConnection() {
-  if (!dbConnection) {
-    dbConnection = knex(dbConfig);
-  }
+  if (dbConnection) return dbConnection;
+
+  dbConnection = knex(dbConfig);
 
   return dbConnection;
+}
+
+export function closeDBConnection() {
+  if (dbConnection) {
+    dbConnection.destroy();
+  }
 }
