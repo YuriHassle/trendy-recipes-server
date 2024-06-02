@@ -1,4 +1,4 @@
-import { buildFastify, destroyFastify } from '../../src/app';
+import buildFastify, { destroyFastify } from '../../src/app';
 import type { FastifyInstance } from 'fastify';
 
 let fastify: FastifyInstance;

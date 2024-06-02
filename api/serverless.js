@@ -12,15 +12,10 @@ const app = Fastify({
   logger: true,
 });
 
-// // Register your application as a normal plugin.
-// app.register(import('../src/app.js'));
-
-app.get('/', async (req, res) => {
-  return res.status(200).type('text/html').send('hello world');
-});
+// Register your application as a normal plugin.
+app.register(import('../src/app.js'));
 
 export default async (req, res) => {
-  console.log('Fastify Serverless');
   await app.ready();
   app.server.emit('request', req, res);
 };

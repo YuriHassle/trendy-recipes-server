@@ -13,17 +13,27 @@ addFormats(ajv, ['email', 'time', 'uri']).addKeyword('kind').addKeyword('modifie
 addErrors(ajv);
 
 let server: FastifyInstance;
-buildFastify();
-listenToFastify();
 
-export function buildFastify() {
+initServer();
+
+function initServer() {
+  buildFastify();
+  listenToFastify();
+}
+
+export default function buildFastify(): FastifyInstance {
   if (server) return server;
 
   server = fastify().withTypeProvider<TypeBoxTypeProvider>();
   server.setValidatorCompiler(({ schema }) => ajv.compile(schema));
-  server.register(userRouter, { prefix: '/users' });
-  server.register(videoRouter, { prefix: '/videos' });
-  server.register(recipeRouter, { prefix: '/recipes' });
+
+  server.get('/', async () => {
+    return 'Trendy Recipes API';
+  });
+
+  server.register(userRouter, { prefix: '/api/v1/users' });
+  server.register(videoRouter, { prefix: '/api/v1/videos' });
+  server.register(recipeRouter, { prefix: '/api/v1/recipes' });
 
   return server;
 }
