@@ -31,7 +31,7 @@ export default async function buildFastify(
   // server.withTypeProvider<TypeBoxTypeProvider>();
   // server.setValidatorCompiler(({ schema }) => ajv.compile(schema));
 
-  server.get('/', async () => {
+  server.get('/test', async () => {
     return 'Trendy Recipes API';
   });
 
