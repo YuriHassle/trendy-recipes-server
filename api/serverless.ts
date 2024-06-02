@@ -7,7 +7,7 @@ dotenv.config();
 // Require the framework
 import Fastify from 'fastify';
 
-import routes from '../src/app.js';
+// import routes from '../src/app.js';
 
 // Instantiate Fastify with some config
 const app = Fastify({
@@ -18,7 +18,7 @@ const app = Fastify({
 app.get('/', async () => {
   return { hello: 'world' };
 });
-app.register(routes);
+// app.register(routes);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default async (req: any, res: any) => {
