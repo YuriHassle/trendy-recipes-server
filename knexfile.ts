@@ -9,8 +9,10 @@ const fullDbConfig = {
   },
 };
 
-export const config: { [key: string]: Knex.Config } = {
+const config: { [key: string]: Knex.Config } = {
   development: fullDbConfig,
   staging: fullDbConfig,
   production: fullDbConfig,
 };
+
+export default config;

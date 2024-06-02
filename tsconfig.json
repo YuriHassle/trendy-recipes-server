@@ -4,6 +4,7 @@
 
   "_version": "18.2.0",
   "extends": "@tsconfig/node18/tsconfig.json",
+  "exclude": ["node_modules", "dist", "tests"],
 
   "compilerOptions": {
     "lib": ["es2023"],

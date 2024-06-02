@@ -1,1 +1,1 @@
-export const DB_CLIENT = 'mysql';
+export const DB_CLIENT = 'pg';
