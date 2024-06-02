@@ -1,12 +1,9 @@
 import getDBConnection from '../../../database/config';
-import { LanguageType, LanguagesType } from '../domain/LanguageSchema';
-import BaseRepository from '../../../common/BaseRepository';
+import { Language } from './model';
+import BaseRepository from '../../../generators/BaseRepository';
 
-export default class LanguageRepository extends BaseRepository<
-  LanguageType,
-  LanguagesType
-> {
+export default class LanguageRepository extends BaseRepository<Language> {
   constructor() {
-    super(getDBConnection()<LanguageType, LanguagesType>('languages'));
+    super(getDBConnection()('languages'));
   }
 }

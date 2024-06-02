@@ -1,5 +1,5 @@
-import { Type } from '@sinclair/typebox';
-import BaseSchema from '../../../common/BaseSchema';
+import { Static, Type } from '@sinclair/typebox';
+import BaseSchema from '../../../generators/BaseSchema';
 
 export const Language = Type.Object({
   id: Type.Number(),
@@ -22,21 +22,20 @@ export const LanguageBodyUpdate = Type.Object({
   name: Type.Optional(Type.String()),
 });
 
-export type LanguageType = typeof Language;
-export type LanguagesType = typeof Languages;
-export type LanguageBodyAddType = typeof LanguageBodyAdd;
-export type LanguageBodyUpdateType = typeof LanguageBodyUpdate;
+export type LanguageType = Static<typeof Language>;
+export type LanguageBodyAddType = Static<typeof LanguageBodyAdd>;
+export type LanguageBodyUpdateType = Static<typeof LanguageBodyUpdate>;
 
 export default class LanguageSchema extends BaseSchema<
-  LanguageType,
-  LanguagesType,
-  LanguageBodyAddType,
-  LanguageBodyUpdateType
+  typeof Language,
+  typeof Languages,
+  typeof LanguageBodyAdd,
+  typeof LanguageBodyUpdate
 > {
   constructor() {
     super({
       replySingle: Language,
-      replyAll: Languages,
+      replyMany: Languages,
       bodyAdd: LanguageBodyAdd,
       bodyUpdate: LanguageBodyUpdate,
     });
