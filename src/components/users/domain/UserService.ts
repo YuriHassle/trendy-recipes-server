@@ -10,6 +10,16 @@ import { UserBodyAddType, UserType, UserBodyUpdateType } from './UserSchema';
 import RM from '../../../messages/ResponseMessages';
 
 const entityName = 'User';
+const returningFields: Array<keyof UserType> = [
+  'id',
+  'active',
+  'email',
+  'name',
+  'points',
+  'language_id',
+  'created_at',
+  'updated_at',
+];
 
 export default class UserService {
   async findOne(
@@ -33,8 +43,8 @@ export default class UserService {
   ) {
     const { offset, orderBy, orderDirection, limit } = request.query;
     const users = await new UserRepository().findAll({
-      limit: Number(limit),
-      offset: Number(offset),
+      limit,
+      offset,
       orderBy,
       orderDirection,
     });
@@ -46,15 +56,21 @@ export default class UserService {
     reply: FastifyCustomReply<DefaultReply<UserType>>,
   ) {
     const { email, language_id, name, password, points } = request.body;
-    const userId = await new UserRepository().create({
+
+    const payload = {
       email,
       name,
       password,
       points,
       language_id,
+    };
+
+    const user = await new UserRepository().create({
+      payload,
+      returningFields,
     });
-    const newUser = await new UserRepository().findById(userId[0]);
-    reply.status(201).send(newUser);
+
+    reply.status(201).send(user[0]);
   }
 
   async update(
@@ -64,18 +80,25 @@ export default class UserService {
     const { id } = request.params;
     const parsedId = Number(id);
     const { email, language_id, name } = request.body;
-    await new UserRepository().update(parsedId, {
+
+    const payload = {
       email,
       name,
       language_id,
+    };
+
+    const updatedUser = await new UserRepository().update({
+      id: parsedId,
+      payload,
+      returningFields,
     });
-    const updatedUser = await new UserRepository().findById(parsedId);
-    if (!updatedUser) {
+
+    if (!updatedUser.length) {
       reply.status(404).send({
         message: RM.notFound(entityName, parsedId),
       });
     }
-    reply.status(200).send(updatedUser);
+    reply.status(200).send(updatedUser[0]);
   }
 
   async delete(

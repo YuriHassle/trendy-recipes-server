@@ -10,6 +10,14 @@ import RM from '../../../messages/ResponseMessages';
 import { DefaultMessageType } from '../../../utils/schemas';
 
 const entityName = 'Video';
+const returningFields: Array<keyof VideoType> = [
+  'id',
+  'active',
+  'source',
+  'url',
+  'created_at',
+  'updated_at',
+];
 
 export default class VideoService {
   async findOne(
@@ -33,8 +41,8 @@ export default class VideoService {
   ) {
     const { offset, orderBy, orderDirection, limit } = request.query;
     const videos = await new VideoRepository().findAll({
-      limit: Number(limit),
-      offset: Number(offset),
+      limit,
+      offset,
       orderBy,
       orderDirection,
     });
@@ -46,12 +54,17 @@ export default class VideoService {
     reply: FastifyCustomReply<DefaultReply<VideoType | DefaultMessageType>>,
   ) {
     const { source, url } = request.body;
-    const videoId = await new VideoRepository().create({
+    const payload = {
       source,
       url,
+    };
+
+    const video = await new VideoRepository().create({
+      payload,
+      returningFields,
     });
-    const newVideo = await new VideoRepository().findById(videoId[0]);
-    reply.status(200).send(newVideo);
+
+    reply.status(200).send(video[0]);
   }
 
   async update(
@@ -61,17 +74,22 @@ export default class VideoService {
     const { id } = request.params;
     const parsedId = Number(id);
     const { source, url } = request.body;
-    await new VideoRepository().update(parsedId, {
+    const payload = {
       source,
       url,
+    };
+    const updatedVideo = await new VideoRepository().update({
+      id: parsedId,
+      payload,
+      returningFields,
     });
-    const updatedVideo = await new VideoRepository().findById(parsedId);
-    if (!updatedVideo) {
+
+    if (!updatedVideo.length) {
       reply.status(400).send({
         message: RM.notFound(entityName, parsedId),
       });
     }
-    reply.status(200).send(updatedVideo);
+    reply.status(200).send(updatedVideo[0]);
   }
 
   async delete(

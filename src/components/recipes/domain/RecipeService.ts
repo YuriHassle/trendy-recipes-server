@@ -10,6 +10,18 @@ import { RecipeType, RecipeBodyAddType, RecipeBodyUpdateType } from './RecipeSch
 import RM from '../../../messages/ResponseMessages';
 
 const entityName = 'Recipe';
+const returningFields: Array<keyof RecipeType> = [
+  'id',
+  'active',
+  'title',
+  'description',
+  'ingredients',
+  'preparation',
+  'user_id',
+  'video_id',
+  'created_at',
+  'updated_at',
+];
 
 export default class RecipeService {
   async findOne(
@@ -33,8 +45,8 @@ export default class RecipeService {
   ) {
     const { offset, orderBy, orderDirection, limit } = request.query;
     const recipes = await new RecipeRepository().findAll({
-      limit: Number(limit),
-      offset: Number(offset),
+      limit,
+      offset,
       orderBy,
       orderDirection,
     });
@@ -45,26 +57,21 @@ export default class RecipeService {
     request: FastifyRequest<DefaultRequest<RecipeBodyAddType>>,
     reply: FastifyCustomReply<DefaultReply<RecipeType>>,
   ) {
-    const {
-      description,
-      ingredients,
-      preparation,
-      title,
-      user_id,
-      video_id,
-      language_id,
-    } = request.body;
-    const recipeId = await new RecipeRepository().create({
-      description,
-      ingredients,
-      preparation,
-      title,
-      user_id,
-      video_id,
-      language_id,
+    const payload = {
+      description: request.body.description,
+      ingredients: request.body.ingredients,
+      preparation: request.body.preparation,
+      title: request.body.title,
+      user_id: request.body.user_id,
+      video_id: request.body.video_id,
+      language_id: request.body.language_id,
+    };
+
+    const recipe = await new RecipeRepository().create({
+      payload,
+      returningFields,
     });
-    const newRecipe = await new RecipeRepository().findById(recipeId[0]);
-    reply.status(201).send(newRecipe);
+    reply.status(201).send(recipe[0]);
   }
 
   async update(
@@ -74,19 +81,25 @@ export default class RecipeService {
     const { id } = request.params;
     const parsedId = Number(id);
     const { description, ingredients, preparation, title } = request.body;
-    await new RecipeRepository().update(parsedId, {
+    const payload = {
       description,
       ingredients,
       preparation,
       title,
+    };
+
+    const updatedRecipe = await new RecipeRepository().update({
+      id: parsedId,
+      payload,
+      returningFields,
     });
-    const updatedRecipe = await new RecipeRepository().findById(parsedId);
-    if (!updatedRecipe) {
+
+    if (!updatedRecipe.length) {
       reply.status(400).send({
         message: RM.notFound(entityName, parsedId),
       });
     }
-    reply.status(200).send(updatedRecipe);
+    reply.status(200).send(updatedRecipe[0]);
   }
 
   async delete(
