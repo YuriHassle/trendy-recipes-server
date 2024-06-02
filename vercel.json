@@ -1,18 +1,8 @@
 {
-  "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "src/app.js",
-      "use": "@vercel/node",
-      "config": {
-        "distDir": "dist"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "src/app.js"
+      "source": "/(.*)",
+      "destination": "/api/serverless.js"
     }
   ]
 }
