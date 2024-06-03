@@ -7,7 +7,7 @@ dotenv.config();
 // Require the framework
 import Fastify from 'fastify';
 
-// import routes from '../src/app.js';
+import routes from '../src/app.js';
 
 // Instantiate Fastify with some config
 const app = Fastify({
@@ -18,7 +18,7 @@ const app = Fastify({
 app.get('/', async (req, res) => {
   return res.status(200).type('text/html').send('hello world');
 });
-// app.register(routes);
+app.register(routes);
 
 export default async (req, res) => {
   await app.ready();
