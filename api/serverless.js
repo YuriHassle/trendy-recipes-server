@@ -20,8 +20,7 @@ app.get('/', async (req, res) => {
 });
 // app.register(routes);
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default async (req: any, res: any) => {
+export default async (req, res) => {
   await app.ready();
   app.server.emit('request', req, res);
 };
