@@ -15,8 +15,8 @@ const app = Fastify({
 });
 
 // Register your application as a normal plugin.
-app.get('/', async () => {
-  return { hello: 'world' };
+app.get('/', async (req, res) => {
+  return res.status(200).type('text/html').send('hello world');
 });
 // app.register(routes);
 
