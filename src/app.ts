@@ -1,5 +1,4 @@
-import { FastifyInstance, FastifyServerOptions } from 'fastify';
-// import { closeDBConnection } from './database/config';
+import Fastify, { FastifyInstance } from 'fastify';
 import userRouter from './components/users/entry-points/routes';
 import videoRouter from './components/videos/entry-points/routes';
 import recipeRouter from './components/recipes/entry-points/routes';
@@ -12,22 +11,7 @@ const ajv = new AJV({ allErrors: true });
 addFormats(ajv, ['email', 'time', 'uri']).addKeyword('kind').addKeyword('modifier');
 addErrors(ajv);
 
-// let server: FastifyInstance;
-
-// initServer();
-
-// function initServer() {
-//   buildFastify();
-//   listenToFastify();
-// }
-
-export default async function buildFastify(
-  server: FastifyInstance,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  options: FastifyServerOptions,
-) {
-  // if (server) return server;
-
+export async function addFastifyRoutes(server: FastifyInstance): Promise<void> {
   server.withTypeProvider<TypeBoxTypeProvider>();
   server.setValidatorCompiler(({ schema }) => ajv.compile(schema));
 
@@ -38,22 +22,10 @@ export default async function buildFastify(
   server.register(userRouter, { prefix: '/api/v1/users' });
   server.register(videoRouter, { prefix: '/api/v1/videos' });
   server.register(recipeRouter, { prefix: '/api/v1/recipes' });
-  console.log('Server initialized');
-  // return server;
 }
 
-// export function destroyFastify() {
-//   // server.close();
-//   // closeDBConnection();
-//   return true;
-// }
-
-// function listenToFastify() {
-//   server.listen({ port: 3000, host: '127.0.0.1' }, (err, address) => {
-//     if (err) {
-//       console.error(err);
-//       process.exit(1);
-//     }
-//     console.log(`Server listening at ${address}`);
-//   });
-// }
+export function createServer(): FastifyInstance {
+  const server = Fastify();
+  addFastifyRoutes(server);
+  return server;
+}

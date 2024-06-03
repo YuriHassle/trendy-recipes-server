@@ -1,24 +1,25 @@
-import buildFastify, { destroyFastify } from '../../src/app';
-import type { FastifyInstance } from 'fastify';
+import { createServer } from '../../src/app';
+import { closeDBConnection } from '../../src/database/config';
 
-let fastify: FastifyInstance;
+const baseUrl = '/api/v1/users';
+const server = createServer();
 
 beforeAll(async () => {
-  fastify = buildFastify();
-  await fastify.ready();
+  await server.ready();
 });
 
 afterAll(() => {
-  destroyFastify();
+  server.close();
+  closeDBConnection();
 });
 
 describe('testing user endpoint', () => {
   let userId: number;
 
   test('should create a user', async () => {
-    const { statusCode, body } = await fastify.inject({
+    const { statusCode, body } = await server.inject({
       method: 'POST',
-      url: '/users',
+      url: baseUrl,
       payload: {
         name: 'John Doe',
         email: 'johndoe@email.com',
@@ -37,9 +38,9 @@ describe('testing user endpoint', () => {
   });
 
   test('should not create a user with invalid data', async () => {
-    const { statusCode, body } = await fastify.inject({
+    const { statusCode, body } = await server.inject({
       method: 'POST',
-      url: '/users',
+      url: baseUrl,
       payload: {
         name: 'John Doe',
         email: 'johndoe',
@@ -56,9 +57,9 @@ describe('testing user endpoint', () => {
   });
 
   test('should retrieve one user', async () => {
-    const { statusCode, body } = await fastify.inject({
+    const { statusCode, body } = await server.inject({
       method: 'GET',
-      url: `/users/${userId}`,
+      url: `${baseUrl}/${userId}`,
     });
     const parsedBody = JSON.parse(body);
 
@@ -68,9 +69,9 @@ describe('testing user endpoint', () => {
   });
 
   test('should not retrieve a user that does not exist', async () => {
-    const { statusCode, body } = await fastify.inject({
+    const { statusCode, body } = await server.inject({
       method: 'GET',
-      url: '/users/0',
+      url: `${baseUrl}/0`,
     });
 
     const parsedBody = JSON.parse(body);
@@ -79,9 +80,9 @@ describe('testing user endpoint', () => {
   });
 
   test('should retrieve all users', async () => {
-    const { statusCode, body } = await fastify.inject({
+    const { statusCode, body } = await server.inject({
       method: 'GET',
-      url: '/users?limit=1',
+      url: `${baseUrl}?limit=1`,
     });
     const parsedBody = JSON.parse(body);
 
@@ -91,9 +92,9 @@ describe('testing user endpoint', () => {
   });
 
   test('should update a user', async () => {
-    const { statusCode, body } = await fastify.inject({
+    const { statusCode, body } = await server.inject({
       method: 'PUT',
-      url: `/users/${userId}`,
+      url: `${baseUrl}/${userId}`,
       payload: {
         name: 'John Doe Updated',
       },
@@ -105,9 +106,9 @@ describe('testing user endpoint', () => {
   });
 
   test('should delete a user', async () => {
-    const { statusCode, body } = await fastify.inject({
+    const { statusCode, body } = await server.inject({
       method: 'DELETE',
-      url: `/users/${userId}`,
+      url: `${baseUrl}/${userId}`,
     });
 
     const parsedBody = JSON.parse(body);

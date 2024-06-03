@@ -2,24 +2,16 @@
 
 import { FastifyReply, FastifyRequest } from 'fastify';
 
-// Read the .env file.
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-// Require the framework
-import Fastify from 'fastify';
+import { createServer } from '../src/app.js';
 
-import routes from '../src/app.js';
-
-// Instantiate Fastify with some config
-const app = Fastify({
-  logger: true,
-});
-
-// Register your application as a normal plugin.
-app.register(routes);
+const app = createServer();
 
 export default async (req: FastifyRequest, res: FastifyReply) => {
   await app.ready();
   app.server.emit('request', req, res);
+
+  console.log('Fastify initialized in serverless mode');
 };
