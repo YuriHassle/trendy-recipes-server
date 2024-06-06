@@ -2,9 +2,6 @@
 
 import { FastifyReply, FastifyRequest } from 'fastify';
 
-import * as dotenv from 'dotenv';
-dotenv.config();
-
 import { createServer } from '../src/app.js';
 
 const app = createServer();

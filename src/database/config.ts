@@ -1,9 +1,10 @@
 import knex, { Knex } from 'knex';
 import { DB_CLIENT } from '../utils/constants';
 import dotenv from 'dotenv';
-dotenv.config();
+import dotenvExpand from 'dotenv-expand';
 
-export const dbConfig = {
+dotenvExpand.expand(dotenv.config());
+export const dbConfig: Knex.Config = {
   client: DB_CLIENT,
   connection: process.env.DB_CONNECTION_STRING,
   pool: { min: 2, max: 10 },
