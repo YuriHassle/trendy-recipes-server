@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
 
 dotenvExpand.expand(dotenv.config());
+
 export const dbConfig: Knex.Config = {
   client: DB_CLIENT,
   connection: process.env.DB_CONNECTION_STRING,
@@ -13,7 +14,6 @@ export const dbConfig: Knex.Config = {
 let dbConnection: Knex;
 export default function getDBConnection() {
   if (dbConnection) return dbConnection;
-
   dbConnection = knex(dbConfig);
 
   return dbConnection;

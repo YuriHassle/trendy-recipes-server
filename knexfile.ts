@@ -1,18 +1,19 @@
 import type { Knex } from 'knex';
 import { dbConfig } from './src/database/config';
+import dotenv from 'dotenv';
+import dotenvExpand from 'dotenv-expand';
 
-const fullDbConfig = {
+dotenvExpand.expand(dotenv.config());
+
+const config: Knex.Config = {
   ...dbConfig,
   migrations: {
     tableName: 'knex_migrations',
     directory: './src/database/migrations',
   },
-};
-
-const config: { [key: string]: Knex.Config } = {
-  development: fullDbConfig,
-  staging: fullDbConfig,
-  production: fullDbConfig,
+  seeds: {
+    directory: './src/database/seeds',
+  },
 };
 
 export default config;
