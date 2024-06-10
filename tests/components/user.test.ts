@@ -14,7 +14,7 @@ afterAll(() => {
 });
 
 describe('testing user endpoint', () => {
-  let userId: number;
+  const userId = 1;
 
   test('should create a user', async () => {
     const { statusCode, body } = await server.inject({
@@ -30,10 +30,10 @@ describe('testing user endpoint', () => {
     });
 
     const parsedBody = JSON.parse(body);
-    userId = parsedBody.id;
 
     expect(statusCode).toEqual(201);
-    expect(parsedBody).toHaveProperty('name');
+    expect(parsedBody).toHaveProperty('id', 1);
+    expect(parsedBody).toHaveProperty('name', 'John Doe');
     expect(parsedBody).not.toHaveProperty('password');
   });
 
@@ -88,7 +88,7 @@ describe('testing user endpoint', () => {
 
     expect(statusCode).toEqual(200);
     expect(parsedBody).toHaveLength(1);
-    expect(parsedBody[0]).toHaveProperty('id');
+    expect(parsedBody[0]).toHaveProperty('id', 1);
   });
 
   test('should update a user', async () => {
