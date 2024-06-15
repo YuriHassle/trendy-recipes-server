@@ -1,10 +1,12 @@
 import { Static, Type } from '@sinclair/typebox';
 import BaseSchema from '../../../generators/BaseSchema';
+import { VideoBodyAdd } from '../../videos/domain/VideoSchema';
 
 export const Recipe = Type.Object({
   id: Type.Number(),
   user_id: Type.Number(),
   video_id: Type.Number(),
+  language_id: Type.Number(),
   title: Type.String(),
   description: Type.String(),
   ingredients: Type.String(),
@@ -18,12 +20,13 @@ export const Recipes = Type.Array(Recipe);
 
 export const RecipeBodyAdd = Type.Object({
   user_id: Type.Number(),
-  video_id: Type.Number(),
+  video_id: Type.Optional(Type.Number()),
+  video: Type.Optional(VideoBodyAdd),
   language_id: Type.Number(),
   title: Type.String(),
-  description: Type.String(),
+  description: Type.Optional(Type.String()),
   ingredients: Type.String(),
-  preparation: Type.String(),
+  preparation: Type.Optional(Type.String()),
 });
 
 export const RecipeBodyUpdate = Type.Object({

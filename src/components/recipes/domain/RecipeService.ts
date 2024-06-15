@@ -19,6 +19,7 @@ const returningFields: Array<keyof RecipeType> = [
   'preparation',
   'user_id',
   'video_id',
+  'language_id',
   'created_at',
   'updated_at',
 ];
@@ -55,23 +56,40 @@ export default class RecipeService {
 
   async create(
     request: FastifyRequest<DefaultRequest<RecipeBodyAddType>>,
-    reply: FastifyCustomReply<DefaultReply<RecipeType>>,
+    reply: FastifyCustomReply<DefaultReply<RecipeType | DefaultMessageType>>,
   ) {
-    const payload = {
-      description: request.body.description,
-      ingredients: request.body.ingredients,
-      preparation: request.body.preparation,
-      title: request.body.title,
-      user_id: request.body.user_id,
-      video_id: request.body.video_id,
-      language_id: request.body.language_id,
-    };
+    try {
+      const payload = {
+        description: request.body.description,
+        ingredients: request.body.ingredients,
+        preparation: request.body.preparation,
+        title: request.body.title,
+        user_id: request.body.user_id,
+        video_id: request.body.video_id,
+        language_id: request.body.language_id,
+      };
 
-    const recipe = await new RecipeRepository().create({
-      payload,
-      returningFields,
-    });
-    reply.status(201).send(recipe[0]);
+      let video;
+
+      if (request.body.video) {
+        video = {
+          url: request.body.video.url,
+          source: request.body.video.source,
+        };
+      }
+
+      const [recipe] = await new RecipeRepository().create({
+        payload,
+        video,
+        returningFields,
+      });
+
+      reply.status(201).send(recipe);
+    } catch (error: unknown) {
+      reply.status(400).send({
+        message: String(error),
+      });
+    }
   }
 
   async update(
