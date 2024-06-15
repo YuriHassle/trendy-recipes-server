@@ -3,7 +3,7 @@ import { Knex } from 'knex';
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable('videos', (table) => {
     table.increments('id').primary();
-    table.string('url', 200).notNullable();
+    table.string('url', 200).notNullable().unique();
     table.enu('source', ['tiktok']).defaultTo('tiktok');
     table.boolean('active').notNullable().defaultTo(true);
     table.timestamps(true, true);
