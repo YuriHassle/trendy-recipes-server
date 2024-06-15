@@ -13,8 +13,8 @@ afterAll(() => {
   closeDBConnection();
 });
 
-describe('testing user endpoint', () => {
-  const userId = 1;
+describe('testing users endpoint', () => {
+  const userId = 2;
 
   test('should create a user', async () => {
     const { statusCode, body } = await server.inject({
@@ -32,9 +32,16 @@ describe('testing user endpoint', () => {
     const parsedBody = JSON.parse(body);
 
     expect(statusCode).toEqual(201);
-    expect(parsedBody).toHaveProperty('id', 1);
-    expect(parsedBody).toHaveProperty('name', 'John Doe');
-    expect(parsedBody).not.toHaveProperty('password');
+    expect(parsedBody).toEqual({
+      id: userId,
+      name: 'John Doe',
+      email: 'johndoe@email.com',
+      language_id: 1,
+      active: true,
+      points: 0,
+      created_at: expect.any(String),
+      updated_at: expect.any(String),
+    });
   });
 
   test('should not create a user with invalid data', async () => {
@@ -82,13 +89,17 @@ describe('testing user endpoint', () => {
   test('should retrieve all users', async () => {
     const { statusCode, body } = await server.inject({
       method: 'GET',
-      url: `${baseUrl}?limit=1`,
+      url: `${baseUrl}`,
+      query: {
+        order: 'id',
+        orderDirection: 'asc',
+      },
     });
     const parsedBody = JSON.parse(body);
 
     expect(statusCode).toEqual(200);
-    expect(parsedBody).toHaveLength(1);
-    expect(parsedBody[0]).toHaveProperty('id', 1);
+    expect(parsedBody).toHaveLength(2);
+    expect(parsedBody[1]).toHaveProperty('id', 2);
   });
 
   test('should update a user', async () => {

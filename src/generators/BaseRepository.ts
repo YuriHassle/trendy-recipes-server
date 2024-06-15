@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
 import { DefaultQueryType } from '../utils/schemas';
 
-interface CreateParams<Entity> {
+export interface CreateParams<Entity> {
   payload: Omit<Partial<Entity>, 'id'>;
   returningFields: Array<keyof Entity>;
 }
@@ -33,15 +33,15 @@ export default abstract class BaseRepository<Entity> {
 
   async create(params: CreateParams<Entity>): Promise<Entity[]> {
     return this.entity
-      .returning(params.returningFields as Array<string>)
-      .insert(params.payload) as Promise<Entity[]>;
+      .insert(params.payload)
+      .returning(params.returningFields as Array<string>) as Promise<Entity[]>;
   }
 
   async update(params: UpdateParams<Entity>): Promise<Entity[]> {
     return this.entity
-      .returning(params.returningFields as Array<string>)
       .update(params.payload)
-      .where({ id: params.id }) as unknown as Promise<Entity[]>;
+      .where({ id: params.id })
+      .returning(params.returningFields as Array<string>) as Promise<Entity[]>;
   }
 
   async delete(id: number): Promise<number> {
