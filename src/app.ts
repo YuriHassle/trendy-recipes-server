@@ -16,7 +16,7 @@ export async function addFastifyRoutes(server: FastifyInstance): Promise<void> {
   server.withTypeProvider<TypeBoxTypeProvider>();
   server.setValidatorCompiler(({ schema }) => ajv.compile(schema));
   server.register(cors, {
-    origin: ['http://localhost:3001'],
+    origin: ['http://localhost:3001', 'https://www.trendy-recipes.com.br'],
   });
 
   server.get('/', async () => {
