@@ -16,7 +16,7 @@ afterAll(() => {
 describe('testing recipes endpoint', () => {
   const recipeId = 2;
 
-  test('should create a recipe passing video_id on property on payload', async () => {
+  test('should create a recipe passing video_id property on payload', async () => {
     const { statusCode, body } = await server.inject({
       method: 'POST',
       url: baseUrl,

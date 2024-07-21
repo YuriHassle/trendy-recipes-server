@@ -1,4 +1,5 @@
 import Fastify, { FastifyInstance } from 'fastify';
+import cors from '@fastify/cors';
 import userRouter from './components/users/entry-points/routes';
 import videoRouter from './components/videos/entry-points/routes';
 import recipeRouter from './components/recipes/entry-points/routes';
@@ -14,6 +15,9 @@ addErrors(ajv);
 export async function addFastifyRoutes(server: FastifyInstance): Promise<void> {
   server.withTypeProvider<TypeBoxTypeProvider>();
   server.setValidatorCompiler(({ schema }) => ajv.compile(schema));
+  server.register(cors, {
+    origin: ['http://localhost:3001'],
+  });
 
   server.get('/', async () => {
     return 'Trendy Recipes API';
