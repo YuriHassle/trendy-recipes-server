@@ -17,7 +17,7 @@ export const Video = Type.Object({
 export const Videos = Type.Array(Video);
 
 export const VideoBodyAdd = Type.Object({
-  url: Type.String(),
+  url: Type.String({ format: 'uri' }),
   source: Type.Enum(VideoSource),
 });
 
