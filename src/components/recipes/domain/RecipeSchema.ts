@@ -1,11 +1,12 @@
 import { Static, Type } from '@sinclair/typebox';
 import BaseSchema from '../../../generators/BaseSchema';
-import { VideoBodyAdd } from '../../videos/domain/VideoSchema';
+import { VideoBodyAdd, Video } from '../../videos/domain/VideoSchema';
 
 export const Recipe = Type.Object({
   id: Type.Number(),
   user_id: Type.Number(),
   video_id: Type.Number(),
+  video: Type.Optional(Video),
   language_id: Type.Number(),
   title: Type.String(),
   description: Type.String(),

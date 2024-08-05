@@ -8,9 +8,10 @@ import {
 import { DefaultMessageType } from '../../../utils/schemas';
 import { UserBodyAddType, UserType, UserBodyUpdateType } from './UserSchema';
 import RM from '../../../messages/ResponseMessages';
+import { User } from '../data-access/model';
 
 const entityName = 'User';
-const returningFields: Array<keyof UserType> = [
+const returningFields: Array<keyof User> = [
   'id',
   'active',
   'email',

@@ -7,10 +7,12 @@ import {
 } from '../../../generators/BaseSchema';
 import { DefaultMessageType } from '../../../utils/schemas';
 import { RecipeType, RecipeBodyAddType, RecipeBodyUpdateType } from './RecipeSchema';
+import { Recipe } from '../data-access/model';
 import RM from '../../../messages/ResponseMessages';
+import VideoRepository from '../../videos/data-access/VideoRepository';
 
 const entityName = 'Recipe';
-const returningFields: Array<keyof RecipeType> = [
+const returningFields: Array<keyof Recipe> = [
   'id',
   'active',
   'title',
@@ -37,7 +39,9 @@ export default class RecipeService {
         message: RM.notFound(entityName, parsedId),
       });
     }
-    reply.status(200).send(recipe);
+
+    const video = await new VideoRepository().findById(recipe.video_id);
+    reply.status(200).send({ ...recipe, video });
   }
 
   async findAll(

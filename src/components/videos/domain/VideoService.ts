@@ -8,9 +8,10 @@ import { VideoBodyAddType, VideoBodyUpdateType, VideoType } from './VideoSchema'
 import VideoRepository from '../data-access/VideoRepository';
 import RM from '../../../messages/ResponseMessages';
 import { DefaultMessageType } from '../../../utils/schemas';
+import { Video } from '../data-access/model';
 
 const entityName = 'Video';
-const returningFields: Array<keyof VideoType> = [
+const returningFields: Array<keyof Video> = [
   'id',
   'active',
   'source',
